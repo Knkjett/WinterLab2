@@ -1,0 +1,73 @@
+const fs = require('fs');
+
+const save = (class_name, userList, cb) => {
+    console.log('Save')
+    const userRows = [];
+    for (let user of userList) {
+        userRows.push(user.name +','+ user.age+','+user.city+',' + user.grade)
+    }
+    const fileblob = userRows.join('\n');
+    fs.writeFile(`classes/${class_name}`, fileblob, (err, res) => {
+        cb(err, res)
+    })
+};
+
+const load = (class_name, cb) => {
+    console.log('Load')
+    fs.readFile(`classes/${class_name}`, 'utf8', (err, data) => {
+        if (!data) {
+            cb([])
+            console.log("Empty");
+            return;
+        }
+        const rows = data.split('\n')
+        const users = [];
+        for (let row of rows) {
+            const bits = row.split(',');
+            users.push({name: bits[0], age: parseInt(bits[1]), city: bits[2], grade: bits[3]});
+        }
+        cb(users);
+    })
+}
+const checkfail = (class_name, userList, cb) => {
+    console.log('Checkfail')
+    fs.readFile(`classes/${class_name}`, 'utf8', (err, data) => {
+        if (!data) {
+            cb([])
+            console.log("Empty");
+            return;
+        }
+        const rows = data.split('\n')
+        //USER LIST IS CALLED BACK;
+        for (let user of userList) {
+            userRows.push(user.name +','+ user.age+','+user.city+',' + user.grade)
+        }
+        const failusers = [];
+        for (let row of rows) {
+            const bits = row.split(',');
+            if(users.grade > 20){
+                console.log( "HELLO");
+            }
+            users.push({name: bits[0], age: parseInt(bits[1]), city: bits[2], grade: bits[3]})
+        }
+        cb(failusers)
+    })
+}
+
+const add = (class_name, user, cb) => {
+    console.log('Add')
+    load(class_name, currentUsers => {
+        currentUsers.push(user);
+        save(class_name, currentUsers, (err, res) => {
+            cb(err, res)
+        });
+    })
+}
+
+
+module.exports = {
+    save,
+    load,
+    checkfail,
+    add,
+}
