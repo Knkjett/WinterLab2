@@ -73,14 +73,35 @@ app.get('/class/listfailing/', (req, res) => {
         if (currentUsers.length === 0) {
             res.json({
                 error: `Class ${myclass} doesn't exist.`
-            })
+            });
         } else {
             classService.checkfail(myclass, failingUsers => {
-
+                res.json({
+                    failingUsers
+                });
             })
         }
+    })
+})
 
-
+app.get('/class/listfromcity/', (req, res) => {
+    const {
+        query
+    } = req;
+    let myclass = query.class;
+    let city = query.city;
+    classService.load(myclass, currentUsers => {
+        if (currentUsers.length === 0) {
+            res.json({
+                error: `Class ${myclass} doesn't exist.`
+            });
+        } else {
+            classService.fromcity(myclass, city, userfrom => {
+                res.json({
+                    userfrom
+                });
+            })
+        }
     })
 })
 
