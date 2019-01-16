@@ -6,6 +6,9 @@ const save = (class_name, userList, cb) => {
     for (let user of userList) {
         userRows.push(user.name +','+ user.age+','+user.city+',' + user.grade)
     }
+    if (!fs.existsSync("classes")){
+        fs.mkdirSync("classes");
+    }    
     const fileblob = userRows.join('\n');
     fs.writeFile(`classes/${class_name}`, fileblob, (err, res) => {
         cb(err, res)
